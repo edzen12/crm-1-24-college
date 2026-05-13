@@ -1,5 +1,5 @@
 from django.db import models
-from apps.common.models import TimeStampedModel
+from apps.common.models import TimeStampedModel 
 
 
 class Course(TimeStampedModel):
@@ -24,3 +24,26 @@ class Subject(TimeStampedModel):
 
     def __str__(self):
         return self.name
+    
+
+class TeachingAssignment(TimeStampedModel):
+    teacher = models.ForeignKey(
+        "teachers.Teacher", on_delete=models.CASCADE,
+        related_name='assignments'
+    )
+    group = models.ForeignKey(
+        Group, on_delete=models.CASCADE,
+        related_name='assignments'
+    )
+    subject = models.ForeignKey(
+        Subject, on_delete=models.CASCADE,
+        related_name='assignments'
+    )
+
+    class Meta:
+        unique_together = (
+            'teacher', 'group', 'subject'
+        )
+    
+    def __str__(self):
+        return f"{self.teacher} - {self.group} - {self.subject}"
